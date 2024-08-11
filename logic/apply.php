@@ -1,4 +1,19 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Include PHPMailer files and sendMail function
+require __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/../logic/sendMail.php'; // Include sendMail.php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Create an instance of PHPMailer
+$mail = new PHPMailer(true);
+
+// Include database connection
 include '../database/connection.php';
 
 if (isset($_POST['submit'])) {
@@ -22,8 +37,8 @@ if (isset($_POST['submit'])) {
     $preferences = mysqli_real_escape_string($conn, $_POST['preferences']);
     $has_passport = isset($_POST['has_passport']) ? mysqli_real_escape_string($conn, $_POST['has_passport']) : 'No';
 
-   // File upload directory
-   $upload_dir = __DIR__ . '/uploads/';
+    // File upload directory
+    $upload_dir = __DIR__ . '/uploads/';
 
     // Allowed file types for passport and CV
     $allowed_types = [
@@ -37,13 +52,12 @@ if (isset($_POST['submit'])) {
         $passport_file_name = basename($passport_file['name']);
         $passport_file_tmp_name = $passport_file['tmp_name'];
         $passport_file_type = $passport_file['type'];
-        $passport_file_size = $passport_file['size'];
 
         // Validate file type
         if (in_array($passport_file_type, $allowed_types['passport'])) {
             $passport_new_file_name = uniqid() . '_' . $passport_file_name;
             $passport_file_path = $upload_dir . $passport_new_file_name;
-           // Move the uploaded file
+            // Move the uploaded file
             if (move_uploaded_file($passport_file_tmp_name, $passport_file_path)) {
                 echo "Passport uploaded successfully: " . $passport_new_file_name . "<br>";
             } else {
@@ -62,13 +76,11 @@ if (isset($_POST['submit'])) {
         $cv_file_name = basename($cv_file['name']);
         $cv_file_tmp_name = $cv_file['tmp_name'];
         $cv_file_type = $cv_file['type'];
-        $cv_file_size = $cv_file['size'];
 
         // Validate file type
         if (in_array($cv_file_type, $allowed_types['cv'])) {
             $cv_new_file_name = uniqid() . '_' . $cv_file_name;
             $cv_file_path = $upload_dir . $cv_new_file_name;
-
             // Move the uploaded file
             if (move_uploaded_file($cv_file_tmp_name, $cv_file_path)) {
                 echo "CV uploaded successfully: " . $cv_new_file_name . "<br>";
@@ -83,15 +95,19 @@ if (isset($_POST['submit'])) {
     }
 
     // Insert the form data and file paths into the database
-    $sql = "INSERT INTO applications (name, email, phone_number, age, country, region, district, street, marital_status, education_level, is_working, work_place, has_traveled, traveled_countries, has_applied, applied_countries, preferences, has_passport, passport_file, cv_file)
+    $sql = "INSERT INTO applications (name, email, phone_number, age, country, region, district, street, marital_status, education_level, is_working, work_place, has_traveled, traveled_countries, has_applied, applied_countries, preferences, has_passport, passport, cv)
             VALUES ('$name', '$email', '$phone_number', '$age', '$country', '$region', '$district', '$street', '$marital_status', '$education_level', '$is_working', '$work_place', '$has_traveled', '$traveled_countries', '$has_applied', '$applied_countries', '$preferences','$has_passport', '$passport_new_file_name', '$cv_new_file_name')";
-    $sqlo = "INSERT INTO `applications` (`name`, `email`, `phone_number`, `age`, `country`, `region`, `district`, `street`, `marital_status`, `education_level`, `is_working`, `work_place`, `has_traveled`, `traveled_countries`, `has_applied`, `applied_countries`, `preferences`, `has_passport`, `passport`, `cv`, `created_at`) 
-             VALUES ('$name', '$email', $phone_number, $age, '$country', '$region', '$district', '$street', '$marital_status', '$education_level', '$is_working', '$work_place', '$has_traveled', '$traveled_countries', '$has_applied', '$applied_countries', '$preferences','$has_passport', '$passport_new_file_name', '$cv_new_file_name', current_timestamp());";
-    $done = mysqli_query($conn,$sqlo);
 
-    if($done){
-        header('location:../index.php?info=A form submitted successfully');
+    $done = mysqli_query($conn, $sql);
+
+    if ($done) {
+        // Call the send function
+        if (send($mail)) {
+            header('location:../index.php?info=A form submitted successfully');
+        }
     }
 
     mysqli_close($conn);
 }
+
+?>
