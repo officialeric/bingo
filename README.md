@@ -31,13 +31,13 @@ This is a job application website where users can apply for various job position
 1. **Clone the Repository**
 
     ```bash
-    git clone https://github.com/yourusername/job-application-website.git
+    git clone https://github.com/officialeric/bingo.git
     ```
 
 2. **Setup Database**
 
     - Create a new database in MySQL named `bingo`.
-    - Import the SQL schema from `database/schema.sql` to set up the required tables.
+    - Import the SQL schema from `database/bingo.sql` to set up the required tables.
 
 3. **Configure Database Connection**
 
@@ -45,13 +45,13 @@ This is a job application website where users can apply for various job position
 
 4. **Upload Files**
 
-    - Ensure that the `uploads/` directory has appropriate permissions for file uploads.
+    - Ensure that the `logic/uploads/` directory has appropriate permissions for file uploads.
 
 5. **Run the Application**
 
     - Start your Apache server and MySQL server.
     - Place the project directory in your web server's root directory (e.g., `htdocs` for XAMPP).
-    - Access the application via `http://localhost/job-application-website` in your browser.
+    - Access the application via `http://localhost/bingo` in your browser.
 
 ## Usage
 
@@ -80,4 +80,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - **Eric Ernest** - Developer
 
-For any issues or questions, please contact [Eric Ernest](mailto:eric@example.com).
+For any issues or questions, please contact [Eric Ernest](mailto:officialeric994@gmail.com).
