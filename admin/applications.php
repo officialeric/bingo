@@ -40,17 +40,19 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <?php $i=1; foreach($applications as $application) :?>
+                     <?php $i=1; 
+                     
+                     foreach($all_apps as $application) :?>
                      <tr class="align-middle">
                         <td><?=$i++?></td>
                   
-                        <td><?='email'?></td>
-                        <td><?='number'?></td>
+                        <td><?=$application['name'] ?? null?></td>
+                        <td><?=$application['phone_number'] ?? null?></td>
                         <td>
-                           <a href="editMember.php?id=<?=$application['id']?>&table=members">
-                               <button class='text-white btn btn-success'><i class="bi bi-pencil-square"></i></button>
+                           <a href="viewApplication.php?id=<?=$application['id']?>">
+                               <button class='text-white btn btn-success'><i class="bi bi-eye"></i></button>
                            </a>
-                           <a href="../../../logic/deletion.php?id=<?=$application['id']?>&table=members">
+                           <a href="../logic/deletion.php?id=<?=$application['id']?>">
                               <button class='text-white btn btn-danger'><i class="bi bi-trash3"></i></button>
                            </a>                        
                         </td>
